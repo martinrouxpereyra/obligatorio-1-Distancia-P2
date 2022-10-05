@@ -6,19 +6,24 @@ import java.util.Scanner;
 
 public class Interfaz {
 
+
+    static Scanner lector;
     private static String[][] opciones;
-            static Scanner lector;
-  
+           
     public static void main(String[] args) {
         
-        inicializarOpciones(); 
         
+        Sistema miSist = new Sistema();
+        
+        inicializarOpciones();
+        miSist.menuPrincipal();    
     }
+    
     
     //----------------------------------------------------------------
     //se inicializan las opciones y llama a invocar menu
     //----------------------------------------------------------------
-    private static void inicializarOpciones() {
+    public static void inicializarOpciones() {
 
         opciones = new String[5][2];
         opciones[0][0] = "A - Registrar Jugador";
@@ -36,10 +41,10 @@ public class Interfaz {
         opciones[4][0] = "S - Salir";
         opciones[4][1] = "S";
         
-        invocarMenu();
+
+     
     }
     //----------------------------------------------------------------
-    
     
     
     //----------------------------------------------------------------
@@ -57,10 +62,28 @@ public class Interfaz {
     }
     //----------------------------------------------------------------
     
+    
+    //----------------------------------------------------------------
+    //funcion que valida la opcion elegida
+    //----------------------------------------------------------------
+    private static boolean validarOpcion(String opcion){
+        
+        boolean esValida = false;
+        
+        for(int i=0; i < opciones.length && !esValida; i++){
+            
+            if(opcion.equals(opciones[i][1])){
+                esValida = true;
+            }
+        }
+
+        return esValida;
+    }
+    
     //----------------------------------------------------------------
     //funcion que invoca al menu y pide una opcion
     //----------------------------------------------------------------
-    private static String invocarMenu(){
+    public static String invocarMenu(){
         
         String opcion = "";
         boolean esOpcionValida;
@@ -86,22 +109,69 @@ public class Interfaz {
     //----------------------------------------------------------------
     
     
-    //----------------------------------------------------------------
-    //funcion que valida la opcion elegida
-    //----------------------------------------------------------------
-    private static boolean validarOpcion(String opcion){
+ 
+    public void registrarJugador(){
         
-        boolean esValida = false;
+        ////////////////////////////////////////////////////////////////////
+        //pedido del nombre y sistema valida que sea un nombre valido
+        ////////////////////////////////////////////////////////////////////
+       
+        lector = new Scanner(System.in);
         
-        for(int i=0; i < opciones.length && !esValida; i++){
+        System.out.println("ingrese nombre del jugador");
+        String nombreJugador = lector.nextLine().toUpperCase();
+        
+       /* if(!Sistema.validarNombreJugador(nombreJugador)){
             
-            if(opcion.equals(opciones[i][1])){
-                esValida = true;
-            }
-        }
-
-        return esValida;
+            System.out.println("nombre no valido, ingreselo nuevamente");
+            
+            do{
+                
+                nombreJugador = lector.nextLine().toUpperCase();
+                
+                if(!Sistema.validarNombreJugador(nombreJugador)){
+                    
+                    System.out.println("ingreselo nuevamente");
+                }
+                
+            }while(!Sistema.validarNombreJugador(nombreJugador));
+        }*/       
+        //////////////////////////////////////////////////////////////////// 
+        
+        
+        ////////////////////////////////////////////////////////////////////
+        //pedido del edad y sistema valida que sea una edad valida
+        ////////////////////////////////////////////////////////////////////
+        
+        System.out.println("ingrese la edad del jugador");
+        String edadJugador = lector.nextLine();
+        
+        /*if(!Sistema.validarEdadJugador(edadJugador)){
+            
+            System.out.println("edad invalida, ingresela nuevamente");
+            
+            do{
+                
+                if(!Sistema.validarEdadJugador(edadJugador)){
+                   
+                    System.out.println("ingresela nuevamente");                   
+                }
+           
+            }while(!Sistema.validarEdadJugador(edadJugador));
+        }*/
+        ////////////////////////////////////////////////////////////////////
+        
+        
+        ////////////////////////////////////////////////////////////////////
+        //pedido del alias y sistema se encarga de verificar unicidad
+        ////////////////////////////////////////////////////////////////////
+            System.out.println("ingrese un alias para el jugador");
+            String aliasJugador = lector.nextLine();
+            
+            Jugador j = new Jugador(nombreJugador, edadJugador, aliasJugador);
+            
+        ////////////////////////////////////////////////////////////////////
     }
     
-       
+
 }
