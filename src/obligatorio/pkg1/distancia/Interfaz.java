@@ -1,25 +1,21 @@
-
 package obligatorio.pkg1.distancia;
 
 import java.util.Scanner;
 
-
 public class Interfaz {
-
 
     static Scanner lector;
     private static String[][] opciones;
-           
+    private static Sistema miSist;
+
     public static void main(String[] args) {
-        
-        
-        Sistema miSist = new Sistema();
-        
+
+        miSist = new Sistema();
+
         inicializarOpciones();
-        miSist.menuPrincipal();    
+        miSist.menuPrincipal();
     }
-    
-    
+
     //----------------------------------------------------------------
     //se inicializan las opciones y llama a invocar menu
     //----------------------------------------------------------------
@@ -40,13 +36,10 @@ public class Interfaz {
 
         opciones[4][0] = "S - Salir";
         opciones[4][1] = "S";
-        
 
-     
     }
     //----------------------------------------------------------------
-    
-    
+
     //----------------------------------------------------------------
     //mostrar menu
     //----------------------------------------------------------------
@@ -61,117 +54,119 @@ public class Interfaz {
         }
     }
     //----------------------------------------------------------------
-    
-    
+
     //----------------------------------------------------------------
     //funcion que valida la opcion elegida
     //----------------------------------------------------------------
-    private static boolean validarOpcion(String opcion){
-        
+    private static boolean validarOpcion(String opcion) {
+
         boolean esValida = false;
-        
-        for(int i=0; i < opciones.length && !esValida; i++){
-            
-            if(opcion.equals(opciones[i][1])){
+
+        for (int i = 0; i < opciones.length && !esValida; i++) {
+
+            if (opcion.equals(opciones[i][1])) {
                 esValida = true;
             }
         }
 
         return esValida;
     }
-    
+
     //----------------------------------------------------------------
     //funcion que invoca al menu y pide una opcion
     //----------------------------------------------------------------
-    public static String invocarMenu(){
-        
+    public static String invocarMenu() {
+
         String opcion = "";
         boolean esOpcionValida;
         lector = new Scanner(System.in);
-        
-        do{
-        
+
+        do {
+
             mostrarMenu();
             opcion = lector.nextLine().toUpperCase();
-            
+
             esOpcionValida = validarOpcion(opcion);
-            
-            if(!esOpcionValida){
+
+            if (!esOpcionValida) {
                 System.out.println("la opcion no es valida, por favor ingrese otra");
                 System.out.println("");
             }
-            
-        }while(!esOpcionValida);
-        
-        
-     return opcion;       
+
+        } while (!esOpcionValida);
+
+        System.out.println(opcion);
+        return opcion;
     }
     //----------------------------------------------------------------
-    
-    
- 
-    public void registrarJugador(){
-        
+
+    public void pedirDatosJugador() {
+
         ////////////////////////////////////////////////////////////////////
         //pedido del nombre y sistema valida que sea un nombre valido
         ////////////////////////////////////////////////////////////////////
-       
         lector = new Scanner(System.in);
-        
+
         System.out.println("ingrese nombre del jugador");
-        String nombreJugador = lector.nextLine().toUpperCase();
-        
-       /* if(!Sistema.validarNombreJugador(nombreJugador)){
-            
-            System.out.println("nombre no valido, ingreselo nuevamente");
-            
-            do{
-                
-                nombreJugador = lector.nextLine().toUpperCase();
-                
-                if(!Sistema.validarNombreJugador(nombreJugador)){
-                    
-                    System.out.println("ingreselo nuevamente");
-                }
-                
-            }while(!Sistema.validarNombreJugador(nombreJugador));
-        }*/       
+        String nombreJugador;
+        boolean nombreValido;
+
+        do {
+
+            nombreValido = true;
+            nombreJugador = lector.nextLine().toUpperCase();
+
+            if (!miSist.validarJugadorNombre(nombreJugador)) {
+                nombreValido = false;
+                System.out.println("nombre invalido, ingreselo nuevamente");
+            }
+        } while (!nombreValido);
+
         //////////////////////////////////////////////////////////////////// 
-        
-        
         ////////////////////////////////////////////////////////////////////
         //pedido del edad y sistema valida que sea una edad valida
         ////////////////////////////////////////////////////////////////////
-        
-        System.out.println("ingrese la edad del jugador");
-        String edadJugador = lector.nextLine();
-        
-        /*if(!Sistema.validarEdadJugador(edadJugador)){
+        System.out.println("ingrese la edad del juador");
+        String edadJugador;
+        boolean edadValida;
+
+        do {
+
+            edadValida = true;
+            edadJugador = lector.nextLine();
             
-            System.out.println("edad invalida, ingresela nuevamente");
-            
-            do{
-                
-                if(!Sistema.validarEdadJugador(edadJugador)){
-                   
-                    System.out.println("ingresela nuevamente");                   
-                }
-           
-            }while(!Sistema.validarEdadJugador(edadJugador));
-        }*/
+            if (!miSist.validarJugadorEdad(edadJugador)) {
+                edadValida = false;
+                System.out.println("edad invalida, ingresela nuevamente");
+            }
+
+        } while (!edadValida);
+
         ////////////////////////////////////////////////////////////////////
-        
-        
         ////////////////////////////////////////////////////////////////////
         //pedido del alias y sistema se encarga de verificar unicidad
         ////////////////////////////////////////////////////////////////////
-            System.out.println("ingrese un alias para el jugador");
-            String aliasJugador = lector.nextLine();
+        System.out.println("ingrese un alias para el jugador");
+        String aliasJugador = lector.nextLine();
+        boolean aliasValido;
+        
+        do{
+            aliasValido = true;
+            if(!miSist.validarJugadorAlias(aliasJugador)){
+                aliasValido = false;
+                System.out.println("alias invalido, ingreselo nuevamente");
+            }
             
-            Jugador j = new Jugador(nombreJugador, edadJugador, aliasJugador);
-            
-        ////////////////////////////////////////////////////////////////////
+        }while(!aliasValido);
+        
+        
+        Jugador miJugador = new Jugador(nombreJugador, edadJugador, aliasJugador);
+        
+        miSist.registrarJugador(miJugador);
+        
+       
+
     }
-    
+    ////////////////////////////////////////////////////////////////////
 
 }

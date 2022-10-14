@@ -26,7 +26,7 @@ public class Sistema {
             switch (opcion) {
 
                 case "A":
-                    this.registrarJugador();
+                    _Interfaz.pedirDatosJugador();
                     break;
 
                 case "E":
@@ -48,15 +48,48 @@ public class Sistema {
         }
     }
     
-    public void registrarJugador() {
-
-        _Interfaz.registrarJugador();
+    public void registrarJugador(Jugador pJugador) {
+        
+        //Agregar jugador al arraylist
+        _ListaJugadores.add(pJugador);
+        System.out.println(_ListaJugadores);
     }
     
-    //Agregar jugador al arraylist
-    public void agregarJugador(Jugador pJugador) {
-        _ListaJugadores.add(pJugador);
+    
+    public boolean validarJugadorNombre(String pNombre){
+
+        //matches comprueba si un String cumple una expresión regular pasada como parámetro
+        return pNombre.matches("[a-zA-Z]{1,20}");
     }
+    
+    public boolean validarJugadorEdad(String pEdad){
+        
+        //Aca se valida que la edad no sea 0, que no sea 01,02,...09
+        //y con match se comprueba que sean solo digitos entre 0-9 y de 1 0 2 cifras
+        
+        if(pEdad.equals("0")){
+            return false;
+        }
+        
+        String edadAux ="";
+        
+        for(int i = 0; i <= 9; i++){
+            
+            edadAux = "0" + i;
+            
+            if(pEdad.equals(edadAux)){
+                return false;
+            }
+        }      
+        return pEdad.matches("[0-9]{1,2}");       
+    }
+    
+    public boolean validarJugadorAlias(String pAlias){
+        //aca se valida la unicidad del alias
+        
+        return true;
+    }
+    
     
     
     

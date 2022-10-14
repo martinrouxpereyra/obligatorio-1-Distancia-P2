@@ -15,6 +15,7 @@ public class Jugador {
         setNombre(unNombre);
         setEdad(unaEdad);
         setAlias(unAlias);
+        setPuntaje(0);
     }
     
     public String getNombre() {
