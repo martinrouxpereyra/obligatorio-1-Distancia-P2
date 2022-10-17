@@ -96,7 +96,7 @@ public class Interfaz {
 
         } while (!esOpcionValida);
 
-        System.out.println(opcion);
+        //System.out.println(opcion);
         return opcion;
     }
     //----------------------------------------------------------------
@@ -228,7 +228,32 @@ public class Interfaz {
 
     }
 
-    
+    public String pedirJugada(String pTurno){
+        
+        String jugada = "";
+        
+        if(pTurno == "A"){
+            System.out.println("Jugador Azul ingrese Su jugada");
+            jugada = lector.nextLine();
+            
+            while(!miSist.validarJugada(jugada)){
+                System.out.println("jugada incorrecta, ingresela nuevamente");
+                jugada = lector.nextLine();
+            }
+        }else{
+            if(pTurno == "R"){
+                
+                System.out.println("jugador Rojo ingrese Su jugada");
+                jugada = lector.nextLine();
+            
+                while(!miSist.validarJugada(jugada)){
+                    System.out.println("jugada incorrecta, ingresela nuevamente");
+                    jugada = lector.nextLine();
+                }
+            }
+        }
+        return jugada;       
+    }
     
     
 

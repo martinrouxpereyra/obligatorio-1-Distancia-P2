@@ -64,7 +64,7 @@ public class Sistema {
                     break;*/
                     
                 case "J":
-                    _Interfaz.pedirDatosPartida();
+                    this.comenzarPartida();
                     break;
 
                 case "R":
@@ -77,6 +77,19 @@ public class Sistema {
 
         }
     }
+    
+    public void comenzarPartida(){
+        _Interfaz.pedirDatosPartida();
+        
+       this.jugarPartida();
+    }
+    
+    public void jugarPartida(){
+        String turno = "R";
+        String jugada;
+        
+         _Interfaz.pedirJugada(turno);
+    }
 
     public void registrarJugador(String pClave, Jugador pJugador) {
 
@@ -88,7 +101,7 @@ public class Sistema {
 
     public void registrarPartida(Jugador jugadorAzul, Jugador jugadorRojo, String unaConfiguracion){
         
-        _Partida = new Partida(jugadorAzul, jugadorRojo, unaConfiguracion); 
+        //_Partida = new Partida(jugadorAzul, jugadorRojo, unaConfiguracion); 
     }
     ////////////////////////////////////////////////////////////////////////////
     //validaciones a la hora de crear un jugador
@@ -175,5 +188,25 @@ public class Sistema {
     }
     ////////////////////////////////////////////////////////////////////////////
     
+    
+    public boolean validarJugada(String pJugada){
+        
+        if (pJugada.length() != 2) {
+            return false;
+        }
+        
+       char letraPos = Character.toUpperCase(pJugada.charAt(0));
+       int indicePos = Character.getNumericValue(pJugada.charAt(1));
+       
+       if(!(letraPos == 'A' || letraPos == 'B') || letraPos == 'C' || letraPos == 'D' || letraPos == 'F'){
+           return false;
+        }
+       
+       if(indicePos < 1 || indicePos > 6){
+          return false;
+       }    
+       
+       return true;
+    }
     
 }
