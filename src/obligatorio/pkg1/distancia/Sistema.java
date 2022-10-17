@@ -5,13 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import static obligatorio.pkg1.distancia.Interfaz.lector;
 
 public class Sistema {
 
     private Interfaz _Interfaz;
     //public ArrayList<Jugador> _ListaJugadores;
     private HashMap<String, Jugador> _ListaJugadores;
-
+    private Tablero _Tablero;
+    private Partida _Partida;
+    
     public Sistema() {
         //_ListaJugadores = new ArrayList();
         _ListaJugadores = new HashMap<String, Jugador>();
@@ -83,6 +86,10 @@ public class Sistema {
         _ListaJugadores.put(pClave, pJugador);
     }
 
+    public void registrarPartida(Jugador jugadorAzul, Jugador jugadorRojo, String unaConfiguracion){
+        
+        _Partida = new Partida(jugadorAzul, jugadorRojo, unaConfiguracion); 
+    }
     ////////////////////////////////////////////////////////////////////////////
     //validaciones a la hora de crear un jugador
     ////////////////////////////////////////////////////////////////////////////
@@ -127,6 +134,46 @@ public class Sistema {
         }
         return valido;
     }
+    
     ////////////////////////////////////////////////////////////////////////////
  
+    ////////////////////////////////////////////////////////////////////////////
+    //validaciones a la hora de crear una partida
+    ////////////////////////////////////////////////////////////////////////////
+    public String validarIndiceDelJugador(String unAlias) {
+
+        while (!listaJugadoresGet().containsKey(unAlias)) {
+
+            System.out.println("alias Incorrecto ingreselo nuevamente");
+
+            unAlias = lector.nextLine();
+        }
+
+        return unAlias;
+    }
+    
+    public String validarSeleccionDeTablero(String unTablero) {
+
+        boolean confValida = false;
+        
+        do {
+            
+            unTablero = unTablero.toUpperCase().trim();
+
+            if (unTablero.equals("S") || unTablero.equals("P1") || unTablero.equals("P2") ) {
+                confValida = true;
+            } else {
+                System.out.println("\u001B[31mLa opcion no es valida, ingresela denuevo\033[0m");
+                unTablero = lector.nextLine();
+                System.out.println("");
+            }
+
+        } while (!confValida);
+        
+        System.out.println(unTablero);
+        return unTablero;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    
+    
 }

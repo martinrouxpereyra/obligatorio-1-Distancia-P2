@@ -53,6 +53,8 @@ public class Tablero {
                             }else{
                                 if(x == 5 && y == 3){
                                     matPrec1[x][y] = R;
+                                }else{
+                                    matPrec1[x][y] = " ";
                                 }
                             }
                         }
@@ -82,6 +84,8 @@ public class Tablero {
                     }else{
                         if(x == 5 && y == 5){
                             matPrec2[x][y] = R;
+                        }else{
+                            matPrec2[x][y] = " ";
                         }
                     }
                 }
@@ -89,9 +93,8 @@ public class Tablero {
         }       
         return matPrec2;        
     }
-
-    
-     public static void mostrarTableroJuego(String[][] unTablero){
+     
+    public static void mostrarTableroJuego(String[][] unTablero){
         
         String[] letras = {" A "," B "," C "," D "," E "," F "};
         int cont = 0;
@@ -133,6 +136,8 @@ public class Tablero {
         String[] letras = {"A","B","C","D","E","F"};
         
     }
+    
+    
     
 }
 

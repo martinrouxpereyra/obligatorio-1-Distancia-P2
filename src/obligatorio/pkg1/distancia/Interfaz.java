@@ -186,58 +186,51 @@ public class Interfaz {
         System.out.println("ingrese un alias de la lista para elegir el Jugador Azul");
         indiceJugadorA = lector.nextLine();
 
-        validarIndiceDelJugador(indiceJugadorA);
+        indiceJugadorA = miSist.validarIndiceDelJugador(indiceJugadorA);
+        
         jugadorAzul = miSist.listaJugadoresGet().get(indiceJugadorA);
         //System.out.println(jugadorAzul);
-        //////////////////////////////////////////////////////////////////////////////|
+        //////////////////////////////////////////////////////////////////////////////
 
         //pide alias para jugador rojo
         System.out.println("ingrese un alias de la lista para elegir el Jugador Rojo");
         indiceJugadorR = lector.nextLine();
 
-        validarIndiceDelJugador(indiceJugadorR);
+        indiceJugadorR = miSist.validarIndiceDelJugador(indiceJugadorR);
+        
         jugadorRojo = miSist.listaJugadoresGet().get(indiceJugadorR);
-        //System.out.println(jugadorRojo);
-        //////////////////////////////////////////////////////////////////////////////|
+        
+        if (indiceJugadorR.equals(indiceJugadorA)) {
+            System.out.println("Los indices no pueden ser iguales, ingreselo nuevamente.");
+            do {
+                indiceJugadorA = lector.nextLine();
+                indiceJugadorA = miSist.validarIndiceDelJugador(indiceJugadorA);
+            } while (indiceJugadorR.equals(indiceJugadorA));
 
-        String tablero = "";
+        }
+        //System.out.println(jugadorRojo);
+        //////////////////////////////////////////////////////////////////////////////
+
+        
+        //se selecciona un estilo de tablero 
+        String confTablero = "";
         String[][] tableroElegido;
         
         System.out.print("seleccione el tablero a utilizar: ");
-        System.out.println(" S|Standar, P1|precargado 1, P2|precargado2");
-        tablero = lector.nextLine().toUpperCase().trim();
+        System.out.println(" S|Standar, P1|precargado 1, P2|precargado 2");
+        
+        confTablero = lector.nextLine();
         //System.out.println(tablero);
-        validarSeleccionDeTablero(tablero);
-        //llamar a funcion de sistema
-
-    }
-
-    public String validarIndiceDelJugador(String unAlias) {
-
-        while (!miSist.listaJugadoresGet().containsKey(unAlias)) {
-
-            System.out.println("alias Incorrecto ingreselo nuevamente");
-
-            unAlias = lector.nextLine();
-        }
-
-        return unAlias;
-    }
-
-    public String validarSeleccionDeTablero(String unTablero) {
-
-        /*while (!unTablero.equals("S") || !unTablero.equals("P1") || !unTablero.equals("P2")) {
-            
-            System.out.println("seleccion de tablero invalido, ingreselo nuevamente");
-            unTablero = lector.nextLine();
-        }*/
+        miSist.validarSeleccionDeTablero(confTablero);
+        //////////////////////////////////////////////////////////////////////////////|
         
-        while(!unTablero.matches("S") || !unTablero.matches("P1") ||!unTablero.matches("P2") ){
-            
-            System.out.println("seleccion de tablero invalido, ingreselo nuevamente");
-            unTablero = lector.nextLine();
-        }
-        
-        return unTablero;
+       miSist.registrarPartida(jugadorAzul, jugadorRojo, confTablero);
+
     }
+
+    
+    
+    
+
+    
 }
