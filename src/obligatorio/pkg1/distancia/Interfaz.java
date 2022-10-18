@@ -234,6 +234,33 @@ public class Interfaz {
             System.out.println("Jugador Azul ingrese Su jugada");
             jugada = lector.nextLine();
             
+            while(!miSist.validarJugadaDestino(jugada, pTurno)){
+                System.out.println("jugada incorrecta, ingresela nuevamente");
+                jugada = lector.nextLine();
+            }
+        }else{
+            if(pTurno == "R"){
+                
+                System.out.println("jugador Rojo ingrese Su jugada");
+                jugada = lector.nextLine();
+            
+                while(!miSist.validarJugadaDestino(jugada, pTurno)){
+                    System.out.println("jugada incorrecta, ingresela nuevamente");
+                    jugada = lector.nextLine();
+                }
+            }
+        }
+        return jugada;       
+    }
+    
+    public String pedirJugadaDestino(String pTurno){
+        
+         String jugada = "";
+         
+        if(pTurno == "A"){
+            System.out.println("Jugador Azul ingrese Su jugada de destino");
+            jugada = lector.nextLine();
+            
             while(!miSist.validarJugadaOrigen(jugada, pTurno)){
                 System.out.println("jugada incorrecta, ingresela nuevamente");
                 jugada = lector.nextLine();
@@ -250,6 +277,7 @@ public class Interfaz {
                 }
             }
         }
+
         return jugada;       
     }
     

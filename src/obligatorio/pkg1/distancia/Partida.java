@@ -31,7 +31,7 @@ public class Partida {
     }
 
     public Tablero getTablero() {
-        return _Tablero;
+       return _Tablero;
     }
 
     /////////////////////////////////////////////////////////////////////////////

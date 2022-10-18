@@ -20,19 +20,6 @@ public class Tablero {
         return 0;
     }
 
-    public int getCantidadFichasInicialesAzules() {
-        if (clave == "S") {
-            return 18;
-        }
-        if (clave == "P1") {
-            return 3;
-        }
-        if (clave == "P2") {
-            return 2;
-        }
-        return 0;
-    }
-
     public Tablero(String unaClave) {
         this.clave = unaClave;
 
@@ -45,6 +32,19 @@ public class Tablero {
         if (clave == "P2") {
             this.tablero = this.tableroPrecargado2();
         }
+    }
+    
+    public int getCantidadFichasInicialesAzules() {
+        if (clave == "S") {
+            return 18;
+        }
+        if (clave == "P1") {
+            return 3;
+        }
+        if (clave == "P2") {
+            return 2;
+        }
+        return 0;
     }
 
     public String[][] tableroStandar() {
@@ -172,7 +172,7 @@ public class Tablero {
 
     }
 
-    private int getValorLetra(String pLetra) {
+    public int getValorLetra(String pLetra) {
 
         int retorno = 0;
 
@@ -208,15 +208,43 @@ public class Tablero {
     
     public String getFichaPosicion(String pLetra, int pNumero){
             
-        return tablero[getValorLetra(pLetra)][pNumero];          
+        return getFichaPosicion(getValorLetra(pLetra),pNumero);
+    }
+    
+    public String getFichaPosicion(int pNumerox, int pNumeroy){
+            
+        return tablero[pNumerox][pNumeroy];          
+    }
+    
+    public String getFichaPosicion(String pJugada){
+        
+        String letra = pJugada.substring(0, 1);
+        int numero = Integer.parseInt(pJugada.substring(1, 2));
+        
+        return getFichaPosicion(letra, numero);
+        
     }
     
     public int getprofundidadPosicion(String pLetra, int pNumero){
             
-        return matrizPos[getValorLetra(pLetra)][pNumero];          
+        return getprofundidadPosicion(getValorLetra(pLetra),pNumero);
     }
     
+    public int getprofundidadPosicion(int pNumerox, int pNumeroy){
+            
+        return matrizPos[pNumerox][pNumeroy];          
+    }
     
+    public int getprofundidadPosicion(String pJugada){
+        
+        String letra = pJugada.substring(0, 1);
+        int numero = Integer.parseInt(pJugada.substring(1, 2));
+        
+        return getprofundidadPosicion(letra, numero);
+        
+    }
+    
+
 
 
 }
