@@ -7,13 +7,17 @@ public class Partida {
    private Jugador _Jugador1; 
    private Jugador _Jugador2;
    private Tablero _Tablero;
-   private String ganador;
+   private String aliasGanador;
+   private int cantFichasJugador1;
+   private int cantFichasJugador2;
    
    Partida(Jugador _Jugador1, Jugador _Jugador2, Tablero _Tablero){
        
        this.setJugador1(_Jugador1);
        this.setJugador2(_Jugador2);
        this.setTablero(_Tablero);
+       cantFichasJugador1 = _Tablero.getCantidadFichasInicialesRojas();
+       cantFichasJugador2 = _Tablero.getCantidadFichasInicialesAzules();
    }
    /////////////////////////////////////////////////////////////////////////////
    //metodos get
@@ -30,9 +34,6 @@ public class Partida {
         return _Tablero;
     }
 
-    public String getGanador() {
-        return ganador;
-    }
     /////////////////////////////////////////////////////////////////////////////
     
     /////////////////////////////////////////////////////////////////////////////
@@ -52,9 +53,6 @@ public class Partida {
         
     }
 
-    public void setGanador(String ganador) {
-        this.ganador = ganador;
-    }
     /////////////////////////////////////////////////////////////////////////////
     
     

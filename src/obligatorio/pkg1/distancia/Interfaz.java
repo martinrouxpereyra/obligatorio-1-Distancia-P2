@@ -228,7 +228,7 @@ public class Interfaz {
 
     }
 
-    public String pedirJugada(String pTurno){
+    public String pedirJugadaOrigen(String pTurno){
         
         String jugada = "";
         
@@ -236,7 +236,7 @@ public class Interfaz {
             System.out.println("Jugador Azul ingrese Su jugada");
             jugada = lector.nextLine();
             
-            while(!miSist.validarJugada(jugada)){
+            while(!miSist.validarJugadaOrigen(jugada, pTurno)){
                 System.out.println("jugada incorrecta, ingresela nuevamente");
                 jugada = lector.nextLine();
             }
@@ -246,7 +246,7 @@ public class Interfaz {
                 System.out.println("jugador Rojo ingrese Su jugada");
                 jugada = lector.nextLine();
             
-                while(!miSist.validarJugada(jugada)){
+                while(!miSist.validarJugadaOrigen(jugada, pTurno)){
                     System.out.println("jugada incorrecta, ingresela nuevamente");
                     jugada = lector.nextLine();
                 }
@@ -254,6 +254,7 @@ public class Interfaz {
         }
         return jugada;       
     }
+    
     
     
 
