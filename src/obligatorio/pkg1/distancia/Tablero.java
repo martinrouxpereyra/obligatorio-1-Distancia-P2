@@ -131,7 +131,7 @@ public class Tablero {
         return tablero;
     }
 
-    public static void mostrarTableroJuego(String[][] unTablero) {
+    public void mostrarTableroJuego(String[][] unTablero) {
 
         String[] letras = {" A ", " B ", " C ", " D ", " E ", " F "};
         int cont = 0;

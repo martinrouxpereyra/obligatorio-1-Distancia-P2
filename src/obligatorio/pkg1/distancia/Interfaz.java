@@ -27,16 +27,14 @@ public class Interfaz {
         opciones[0][0] = "A - Registrar Jugador";
         opciones[0][1] = "A";
 
-        /*opciones[1][0] = "E - Establecer tablero";
-        opciones[1][1] = "E";*/
-        opciones[2][0] = "J - Jugar Partida";
-        opciones[2][1] = "J";
+        opciones[1][0] = "J - Jugar Partida";
+        opciones[1][1] = "J";
 
-        opciones[3][0] = "R - Ranking";
-        opciones[3][1] = "R";
+        opciones[2][0] = "R - Ranking";
+        opciones[2][1] = "R";
 
-        opciones[4][0] = "S - Salir";
-        opciones[4][1] = "S";
+        opciones[3][0] = "S - Salir";
+        opciones[3][1] = "S";
 
     }
     //----------------------------------------------------------------

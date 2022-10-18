@@ -78,6 +78,7 @@ public class Sistema {
     }
 
     public void comenzarPartida() {
+        
         _Interfaz.pedirDatosPartida();
 
         this.jugarPartida();
@@ -95,60 +96,6 @@ public class Sistema {
         System.out.println("termino juego");
     }
 
-    private int jugarTurno(String pTurno) {
-
-        HashMap<String,String> listaMovimientosValidos;
-        
-        //devuelvo -1 si finzaliza el juego, de lo contrario devuelvo 1
-        String jugada;
-
-        //punto 1, 2 y 3 del turno
-        jugada = _Interfaz.pedirJugadaOrigen(pTurno).toUpperCase();
-
-        if (jugada == "X") {
-            return -1;
-        }
-
-        //punto 4 - averiguar movimientos validos
-        listaMovimientosValidos = getMovimientosValidos(jugada, pTurno);
-        //funcion encontrar posiciones
-        
-        //punto 5 - mostrar movimientos validos
-        
-        //punto 6,7,8 
-        //jugada = _Interfaz.pedirJugadaDestino(pTurno).toUpperCase();
-
-        if (jugada == "X") {
-            return -1;
-        }
-        
-        //punto 9 - realizar movimiento
-        
-        //punto 10 reDibujar tablero
-        
-        return 1;
-    }
-
-    private HashMap<String,String> getMovimientosValidos(String pJugadaOrigen, String pTurno){
-        
-       HashMap<String,String> miLista = new HashMap<String,String>();
-       //averiguar profundidad origen
-       //
-       
-       return miLista;
-    }
-    
-    
-    private String getXjugada(String pJugada) {
-
-        return pJugada.substring(0, 1);
-        //int indicePos = Character.getNumericValue(pJugada.charAt(1));      
-    }
-
-    private int getYjugada(String pJugada) {
-
-        return Integer.parseInt(pJugada.substring(1, 2));
-    }
 
     public void registrarJugador(String pClave, Jugador pJugador) {
 
@@ -157,12 +104,6 @@ public class Sistema {
         //System.out.println(_ListaJugadores);
         _ListaJugadores.put(pClave, pJugador);
     }
-
-    public void registrarPartida(Jugador jugadorAzul, Jugador jugadorRojo, String unaTipoTablero) {
-
-        _Partida = new Partida(jugadorAzul, jugadorRojo, new Tablero(unaTipoTablero));
-    }
-
     ////////////////////////////////////////////////////////////////////////////
     //validaciones a la hora de crear un jugador
     ////////////////////////////////////////////////////////////////////////////
@@ -207,7 +148,14 @@ public class Sistema {
         }
         return valido;
     }
+    ////////////////////////////////////////////////////////////////////////////
+    
+    
+    public void registrarPartida(Jugador jugadorAzul, Jugador jugadorRojo, String unTipoTablero) {
 
+        _Partida = new Partida(jugadorAzul, jugadorRojo, new Tablero(unTipoTablero));
+        
+    }
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
     //validaciones a la hora de crear una partida
@@ -282,7 +230,68 @@ public class Sistema {
         return true;
     }
 
-    public int contarFichasAzul() {
+    ////////////////////////////////////////////////////////////////////////////
+    //funciones privadas
+    ////////////////////////////////////////////////////////////////////////////
+    private int jugarTurno(String pTurno) {
+
+        HashMap<String,String> listaMovimientosValidos;
+        
+        //devuelvo -1 si finzaliza el juego, de lo contrario devuelvo 1
+        String jugada;
+
+        //punto 1, 2 y 3 del turno
+        jugada = _Interfaz.pedirJugadaOrigen(pTurno).toUpperCase();
+
+        if (jugada == "X") {
+            return -1;
+        }
+
+        //punto 4 - averiguar movimientos validos
+        listaMovimientosValidos = getMovimientosValidos(jugada, pTurno);
+        //funcion encontrar posiciones
+        
+        //punto 5 - mostrar movimientos validos
+        
+        //punto 6,7,8 
+        //jugada = _Interfaz.pedirJugadaDestino(pTurno).toUpperCase();
+
+        if (jugada == "X") {
+            return -1;
+        }
+        
+        //punto 9 - realizar movimiento
+        
+        //punto 10 reDibujar tablero
+        
+        return 1;
+    }
+
+    private HashMap<String,String> getMovimientosValidos(String pJugadaOrigen, String pTurno){
+        
+       HashMap<String,String> miLista = new HashMap<String,String>();
+       //averiguar profundidad origen
+       _Partida.getTablero();
+       
+       
+       return miLista;
+    }
+     
+    private String getXjugada(String pJugada) {
+
+        return pJugada.substring(0, 1);
+        //int indicePos = Character.getNumericValue(pJugada.charAt(1));      
+    }
+
+    private int getYjugada(String pJugada) {
+
+        return Integer.parseInt(pJugada.substring(1, 2));
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    
+    
+    
+    /*public int contarFichasAzul() {
         return 0;
     }
 
@@ -304,6 +313,6 @@ public class Sistema {
     // armar la matriz con las opciones que tiene para moverse una vez que te pasaron las coordenadas
     public String[][] armarMatrizOpciones() {
         return null;
-    }
+    }*/
 
 }
