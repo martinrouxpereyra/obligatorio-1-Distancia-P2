@@ -1,3 +1,4 @@
+//Martin Roux 254820 - Gaspar Flom 264135
 package obligatorio.pkg1.distancia;
 
 import java.util.ArrayList;
@@ -50,11 +51,6 @@ public class Sistema {
 
     }
 
-    /* @Override
-    public String toString(){
-        
-    }*/
-    //switch que a partir de tu seleccion en menu ejecuta las funciones debidas
     public void menuPrincipal() {
         String opcion = "";
 
@@ -67,9 +63,6 @@ public class Sistema {
                     _Interfaz.pedirDatosJugador();
                     break;
 
-                /*case "E":
-                    //this.elegirTablero();
-                    break;*/
                 case "J":
                     this.comenzarPartida();
                     break;
@@ -79,9 +72,8 @@ public class Sistema {
                     break;
 
                 case "S":
-                //this.finalizar();
+                    return;
             }
-
         }
     }
 
@@ -95,9 +87,13 @@ public class Sistema {
     public void jugarPartida() {
         String turno = "R";
         String jugada;
-
-        while (jugarTurno(turno) != -1) {
-
+        boolean salir = false;
+        
+        while (jugarTurno(turno) != -1 && !salir) {
+            
+            turno = siguienteTurno(turno);
+            
+            salir = _Partida.hayGanador();
         }
 
         //aca tengo que mostrar los datos del ganador
@@ -165,7 +161,6 @@ public class Sistema {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
     //validaciones a la hora de crear una partida
     ////////////////////////////////////////////////////////////////////////////
     public String validarIndiceDelJugador(String unAlias) {
@@ -199,16 +194,17 @@ public class Sistema {
         } while (!confValida);
 
         // System.out.println(unTablero);
-        Tablero tablero = new Tablero(unTablero);
         return unTablero;
     }
     ////////////////////////////////////////////////////////////////////////////
 
+    
+    ////////////////////////////////////////////////////////////////////////////
+    //validaciones de las jugadas de origen y destino
+    ////////////////////////////////////////////////////////////////////////////
     public boolean validarJugadaOrigen(String pJugada, String pTurno) {
 
-        if (pJugada.length() != 2) {
-            return false;
-        }
+        
 
         String letraPos = getXjugada(pJugada).toUpperCase();
         int indicePos = getYjugada(pJugada);
@@ -219,26 +215,34 @@ public class Sistema {
         if (letraPos == "X") {
             return true;
         }
+        
+        if (pJugada.length() != 2) {
+            return false;
+        }
 
         if (!(letraPos.equals("A") || letraPos.equals("B") || letraPos.equals("C") || letraPos.equals("D") || letraPos.equals("E") || letraPos.equals("F"))) {
+            //System.out.println("adaaas");
             return false;
         }
 
         if (indicePos < 1 || indicePos > 6) {
+            //System.out.println("ad");
             return false;
         }
 
         //punto 3 del turno
         String ficha = _Partida.getTablero().getFichaPosicion(letraPos, indicePos);
 
-        if (pTurno != ficha) {
+        if (!(pTurno.equals(ficha))) {
+            //System.out.println("adentro del if condicion " + (!(pTurno.equals(ficha))));
+            //System.out.println("adentro del if " + pTurno + " " + ficha);
             return false;
         }
 
         return true;
     }
 
-    public boolean validarJugadaDestino(String pJugada, String pTurno) {
+    public boolean validarJugadaDestino(String pJugada, HashMap<String, String> pMiListaMovimientosValidos) {
 
         if (pJugada.length() != 2) {
             return false;
@@ -259,20 +263,19 @@ public class Sistema {
         }
 
         if (indicePos < 1 || indicePos > 6) {
-            return false;
-        }
-
-        //punto 3 del turno
-        String ficha = _Partida.getTablero().getFichaPosicion(letraPos, indicePos);
-
-        if (pTurno != ficha) {
             return false;
         }
 
         //validar contra la lista de movimientos validos
+        if (!pMiListaMovimientosValidos.containsKey(pJugada)) {
+
+            return false;
+        }
+
         return true;
     }
-
+    ////////////////////////////////////////////////////////////////////////////
+    
     ////////////////////////////////////////////////////////////////////////////
     //funciones privadas
     ////////////////////////////////////////////////////////////////////////////
@@ -281,84 +284,307 @@ public class Sistema {
         HashMap<String, String> listaMovimientosValidos;
 
         //devuelvo -1 si finzaliza el juego, de lo contrario devuelvo 1
-        String jugada;
+        String jugadaOrigen;
+        String jugadaDestino;
 
         //punto 1, 2 y 3 del turno
-        jugada = _Interfaz.pedirJugadaOrigen(pTurno).toUpperCase();
+        jugadaOrigen = _Interfaz.pedirJugadaOrigen(pTurno).toUpperCase();
 
-        if (jugada == "X") {
+        if (jugadaOrigen == "X") {
             return -1;
         }
 
         //punto 4 - averiguar movimientos validos
-        listaMovimientosValidos = getMovimientosValidos(jugada, pTurno);
-        //funcion encontrar posiciones
+        listaMovimientosValidos = getMovimientosValidos(jugadaOrigen, pTurno);
+        //System.out.println(listaMovimientosValidos);
 
+        //funcion encontrar posiciones
         //punto 5 - mostrar movimientos validos
+        cargarTableroJugadasValidas(listaMovimientosValidos);
+
+        //marco la poscision de la jugada con la E
+        _Partida.getTablero().setFichaPosicion(jugadaOrigen, "E");
+
+        mostrarTablero();
+
         //punto 6,7,8 
-        //jugada = _Interfaz.pedirJugadaDestino(pTurno).toUpperCase();
-        if (jugada == "X") {
+        jugadaDestino = _Interfaz.pedirJugadaDestino(pTurno, listaMovimientosValidos).toUpperCase();
+
+        if (jugadaDestino == "X") {
             return -1;
         }
 
         //punto 9 - realizar movimiento
+        realizarMovimiento(jugadaOrigen, jugadaDestino, pTurno, listaMovimientosValidos);
+        
         //punto 10 reDibujar tablero
+        mostrarTablero();
+        
         return 1;
+    }
+
+    private void realizarMovimiento(String pJugadaOrigen, String pJugadaDestino, String pTurno, HashMap<String, String> pMiListaMovimientosValidos) {
+
+        String valorAux;
+        boolean comiFicha = false;
+
+        //seteo en blanco la posicion origen
+        _Partida.getTablero().setFichaPosicion(pJugadaOrigen, " ");
+        ////////////////////////////////////////////////////////////////////////     
+
+        //seteo los valores de la lista de movimientos validos
+        for (HashMap.Entry<String, String> entry : pMiListaMovimientosValidos.entrySet()) {
+
+            valorAux = entry.getValue();
+
+            if (valorAux == "*") {
+                _Partida.getTablero().setFichaPosicion(entry.getKey(), " ");
+            }
+
+            if (valorAux == "#") {
+                _Partida.getTablero().setFichaPosicion(entry.getKey(), siguienteTurno(pTurno));
+
+                if (entry.getKey().equals(pJugadaDestino)) {
+                    comiFicha = true;
+                }
+            }
+        }
+        ////////////////////////////////////////////////////////////////////////
+
+        //seteo mi color en la posicion destino
+        _Partida.getTablero().setFichaPosicion(pJugadaDestino, pTurno);
+        ////////////////////////////////////////////////////////////////////////
+
+        if (comiFicha) {
+
+            //resto las fichas del jugador que le comi
+            _Partida.restarFicha(siguienteTurno(pTurno));
+            ////////////////////////////////////////////////////////////////////////
+
+            //sumo la ficha del jugador del turno
+            _Partida.sumarFicha(pTurno);
+            ////////////////////////////////////////////////////////////////////////
+        }
+
+    }
+
+    private String siguienteTurno(String pTurno) {
+
+        if (pTurno.equals("R")) {
+            return "A";
+        } else {
+            return "R";
+        }
+    }
+
+    private void cargarTableroJugadasValidas(HashMap<String, String> miLista) {
+
+        for (HashMap.Entry<String, String> entry : miLista.entrySet()) {
+
+            _Partida.getTablero().setFichaPosicion(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void mostrarTablero() {
+        _Partida.getTablero().mostrarTableroJuego();
     }
 
     private HashMap<String, String> getMovimientosValidos(String pJugadaOrigen, String pTurno) {
 
         HashMap<String, String> miLista = new HashMap<String, String>();
         boolean salirFor = false;
-
+        int auxy;
+        int auxx;
         Tablero miTablero = _Partida.getTablero();
-        
+
         //averiguar fichaOrgien
         String fichaOrigen = miTablero.getFichaPosicion(pJugadaOrigen);
-        
+
         //averiguar profundidad origen
-        int profundidadOrigen = miTablero.getprofundidadPosicion(pTurno, 0);
-        
+        int profundidadOrigen = miTablero.getprofundidadPosicion(pJugadaOrigen);
+
         //obtengo las coordenadas x, y del origen
         String xOrigen = getXjugada(pJugadaOrigen);
         int yOrigen = getYjugada(pJugadaOrigen);
         int xOrigenInt = _ValorLetras.get(xOrigen);
 
         //caundo voy hacia afuera solo puedo mover a lugares vacios
-        
         //recorro hacia arriba
-        for (int x = xOrigenInt - 1; x > 0 || salirFor; x--) {
+        for (int x = xOrigenInt - 1; x >= 0 && !salirFor; x--) {
 
             String fichaActual = miTablero.getFichaPosicion(x, yOrigen);
+            int profundidadActual = miTablero.getprofundidadPosicion(x, yOrigen);
+            String agregar = movimientoValido(fichaOrigen, profundidadOrigen, fichaActual, profundidadActual);
 
-            if (profundidadOrigen < miTablero.getprofundidadPosicion(x, yOrigen)) {
-                //profundidad origen es menor a profundiad nueva - voy para afuera solo puedo mover a lugares vacios
-                if (fichaActual.equals("")) {
-
-                    miLista.put(this.arrayLetras[x] + Integer.toString(yOrigen), "*");
-                }
+            if (!agregar.equals("")) {
+                miLista.put(this.arrayLetras[x] + Integer.toString(yOrigen), agregar);
                 salirFor = true;
+            }
 
-            } else {
-                //profundidad origen es mayor o igual a profundidad nueva - voy para adentro 
-                if(!(fichaActual.equals(fichaOrigen)) && (!fichaActual.equals(""))){
-                    
-                    miLista.put(this.arrayLetras[x] + Integer.toString(yOrigen), "#");
-                    salirFor = true;
-                }
-            }        
         }
         //fin de recorrer para arriba
-        
+
         //recorro hacia la derecha
         salirFor = false;
-        
-        for(int y = yOrigen+1; y < 6 || salirFor; y++){
-            
+
+        for (int y = yOrigen + 1; y <= 6 && !salirFor; y++) {
+
+            String fichaActual = miTablero.getFichaPosicion(xOrigenInt, y);
+            int profundidadActual = miTablero.getprofundidadPosicion(xOrigenInt, y);
+            String agregar = movimientoValido(fichaOrigen, profundidadOrigen, fichaActual, profundidadActual);
+
+            if (!agregar.equals("")) {
+                miLista.put(xOrigen + Integer.toString(y), agregar);
+                salirFor = true;
+            }
         }
         //fin de recorrer a la derecha
-        
+
+        //recorro hacia abajo
+        salirFor = false;
+
+        for (int x = xOrigenInt + 1; x < 6 && !salirFor; x++) {
+
+            String fichaActual = miTablero.getFichaPosicion(x, yOrigen);
+            int profundidadActual = miTablero.getprofundidadPosicion(x, yOrigen);
+            String agregar = movimientoValido(fichaOrigen, profundidadOrigen, fichaActual, profundidadActual);
+
+            if (!agregar.equals("")) {
+                miLista.put(this.arrayLetras[x] + Integer.toString(yOrigen), agregar);
+                salirFor = true;
+            }
+        }
+        //fin de recorrida hacia abajo
+
+        //recorro hacia la izquierda
+        salirFor = false;
+
+        for (int y = yOrigen - 1; y > 0 && !salirFor; y--) {
+
+            String fichaActual = miTablero.getFichaPosicion(xOrigen, y);
+            int profundidadActual = miTablero.getprofundidadPosicion(xOrigen, y);
+            String agregar = movimientoValido(fichaOrigen, profundidadOrigen, fichaActual, profundidadActual);
+
+            if (!agregar.equals("")) {
+                miLista.put(xOrigen + Integer.toString(y), agregar);
+                salirFor = true;
+            }
+        }
+        //fin del recorrido a la izquierda
+
+        //recorro en diagonal arriba derecha
+        salirFor = false;
+        auxy = yOrigen;
+        for (int x = xOrigenInt - 1; x >= 0 && !salirFor; x--) {
+
+            auxy = auxy + 1;
+
+            if (auxy > 6) {
+                salirFor = true;
+            } else {
+
+                String fichaActual = miTablero.getFichaPosicion(x, auxy);
+                int profundidadActual = miTablero.getprofundidadPosicion(x, auxy);
+                String agregar = movimientoValido(fichaOrigen, profundidadOrigen, fichaActual, profundidadActual);
+
+                if (!agregar.equals("")) {
+                    miLista.put(this.arrayLetras[x] + Integer.toString(auxy), agregar);
+                    salirFor = true;
+
+                }
+            }
+        }
+        //termino recorrido de arriba derecha
+
+        //recorrido abajo derecha
+        salirFor = false;
+        auxy = yOrigen;
+        for (int x = xOrigenInt + 1; x < 6 && !salirFor; x++) {
+
+            auxy = auxy + 1;
+
+            if (auxy > 6) {
+                salirFor = true;
+            } else {
+
+                String fichaActual = miTablero.getFichaPosicion(x, auxy);
+                int profundidadActual = miTablero.getprofundidadPosicion(x, auxy);
+                String agregar = movimientoValido(fichaOrigen, profundidadOrigen, fichaActual, profundidadActual);
+
+                if (!agregar.equals("")) {
+                    miLista.put(this.arrayLetras[x] + Integer.toString(auxy), agregar);
+                    salirFor = true;
+
+                }
+            }
+        }
+        //fin recorrido abajo derecha
+
+        //inicio recorrido abajo izquierda
+        salirFor = false;
+        auxy = yOrigen;
+        for (int x = xOrigenInt + 1; x < 6 && !salirFor; x++) {
+
+            auxy = auxy - 1;
+
+            if (auxy == 0) {
+                salirFor = true;
+            } else {
+
+                String fichaActual = miTablero.getFichaPosicion(x, auxy);
+                int profundidadActual = miTablero.getprofundidadPosicion(x, auxy);
+                String agregar = movimientoValido(fichaOrigen, profundidadOrigen, fichaActual, profundidadActual);
+
+                if (!agregar.equals("")) {
+                    miLista.put(this.arrayLetras[x] + Integer.toString(auxy), agregar);
+                    salirFor = true;
+                }
+            }
+        }
+
+        //fin de recorrido abajo izquierda
+        //inicio recorrido arriba izquierda
+        salirFor = false;
+        auxy = yOrigen;
+        for (int x = xOrigenInt - 1; x >= 0 && !salirFor; x--) {
+
+            auxy = auxy - 1;
+
+            if (auxy == 0) {
+                salirFor = true;
+            } else {
+
+                String fichaActual = miTablero.getFichaPosicion(x, auxy);
+                int profundidadActual = miTablero.getprofundidadPosicion(x, auxy);
+                String agregar = movimientoValido(fichaOrigen, profundidadOrigen, fichaActual, profundidadActual);
+
+                if (!agregar.equals("")) {
+                    miLista.put(this.arrayLetras[x] + Integer.toString(auxy), agregar);
+                    salirFor = true;
+
+                }
+            }
+        }
+        //fin recorrido arriba izquierda
+
         return miLista;
+    }
+
+    private String movimientoValido(String pFichaOrigen, int pProfundidadOrigen, String pFichaActual, int pProfundidadActual) {
+
+        if (pProfundidadOrigen < pProfundidadActual) {
+            //profundidad origen es menor a profundiad nueva - voy para afuera solo puedo mover a lugares vacios
+            if (pFichaActual.equals(" ")) {
+                return "*";
+            }
+        } else {
+            //profundidad origen es mayor o igual a profundidad nueva - voy para adentro 
+            if (!(pFichaActual.equals(pFichaOrigen)) && (!pFichaActual.equals(" "))) {
+                return "#";
+            }
+        }
+
+        return "";
     }
 
     private String getXjugada(String pJugada) {
@@ -372,20 +598,4 @@ public class Sistema {
         return Integer.parseInt(pJugada.substring(1, 2));
     }
     ////////////////////////////////////////////////////////////////////////////
-
-    /*public String[][] moverFicha() {
-        //leer la coordenada y ver que posiciones corresponde
-        // validar que sea valida
-        // llamar a armarMatrizOpciones 
-        // pedirle que elija a cual lugar mover la ficha
-        //validaar que ingreso uno valido (que el lugar esta a +1 en la posicion y que es del color opuesto
-        // lo actualizas
-        //llamas a contarFichasAzul y contarFichasRojo, si alguno llego a cero termino el juego perri
-        return null;
-    }
-
-    // armar la matriz con las opciones que tiene para moverse una vez que te pasaron las coordenadas
-    public String[][] armarMatrizOpciones() {
-        return null;
-    }*/
 }

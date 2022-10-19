@@ -1,4 +1,4 @@
-
+//Martin Roux 254820 - Gaspar Flom 264135
 package obligatorio.pkg1.distancia;
 
 
@@ -14,7 +14,7 @@ public class Jugador {
     public Jugador(String unNombre, String unaEdad, String unAlias){
         setNombre(unNombre);
         setEdad(unaEdad);
-        setAlias(unAlias);
+        setAlias(unAlias.toUpperCase());
         setPuntaje(0);
     }
     

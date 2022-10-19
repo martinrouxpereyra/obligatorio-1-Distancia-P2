@@ -1,3 +1,4 @@
+//Martin Roux 254820 - Gaspar Flom 264135
 package obligatorio.pkg1.distancia;
 
 public class Tablero {
@@ -6,72 +7,87 @@ public class Tablero {
     private int[][] matrizPos = {{6, 5, 4, 4, 5, 6}, {5, 3, 2, 2, 3, 5}, {4, 2, 1, 1, 2, 4}, {4, 2, 1, 1, 2, 4}, {5, 3, 2, 2, 3, 5}, {6, 5, 4, 4, 5, 6}};
     private String clave;
 
+  
+    public Tablero(String unaClave) {
+        this.clave = unaClave;
+        
+        if (clave.equals("S")) {           
+            inicializarTableroStandar();
+        }
+        
+        if (clave.equals("P1")) {
+            inicializarTableroPrecargado1();
+        }
+        if (clave.equals("P2")) {
+            inicializarTableroPrecargado2();
+        }
+    }
+    
+    
     public int getCantidadFichasInicialesRojas() {
 
-        if (clave == "S") {
+        if (clave.equals("S")) {
             return 18;
         }
-        if (clave == "P1") {
+        if (clave.equals("P1")) {
             return 2;
         }
-        if (clave == "P2") {
+        if (clave.equals("P2")) {
             return 1;
         }
         return 0;
     }
-
-    public Tablero(String unaClave) {
-        this.clave = unaClave;
-
-        if (clave == "S") {
-            this.tablero = this.tableroStandar();
-        }
-        if (clave == "P1") {
-            this.tablero = this.tableroPrecargado1();
-        }
-        if (clave == "P2") {
-            this.tablero = this.tableroPrecargado2();
-        }
-    }
     
     public int getCantidadFichasInicialesAzules() {
-        if (clave == "S") {
+        if (clave.equals("S")) {
             return 18;
         }
-        if (clave == "P1") {
+        if (clave.equals("P1")) {
             return 3;
         }
-        if (clave == "P2") {
+        if (clave.equals("P2")) {
             return 2;
         }
         return 0;
     }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    //metodos de inicializacion de los tableros
+    ////////////////////////////////////////////////////////////////////////////
+    public void inicializarTableroStandar() {
 
-    public String[][] tableroStandar() {
+        String R = "R";
+        String A = "A";
 
-        String R = "\u001B[31mR\033[0m";
-        String A = "\u001B[34mA\033[0m";
-
+        //System.out.println("inicializar tablero tablero.length " + tablero.length);
         for (int x = 0; x < tablero.length; x++) {
 
             for (int y = 0; y < tablero[x].length; y++) {
 
-                if (y == 0 || y % 2 == 0) {
+                if (x % 2 == 0) {
+                    
+                    if (y % 2 == 0) {
 
-                    tablero[x][y] = A;
-                } else {
-                    tablero[x][y] = R;
+                        tablero[x][y] = A;
+                    } else {
+                        tablero[x][y] = R;
+                    }
+                }else{
+                    if (y % 2 == 0) {
+
+                        tablero[x][y] = R;
+                    } else {
+                        tablero[x][y] = A;
+                    }
                 }
             }
         }
-
-        return tablero;
     }
 
-    public String[][] tableroPrecargado1() {
+    public void inicializarTableroPrecargado1() {
 
-        String R = "\u001B[31mR\033[0m";
-        String A = "\u001B[34mA\033[0m";
+        String R = "R";
+        String A = "A";
 
         for (int x = 0; x < tablero.length; x++) {
 
@@ -100,13 +116,12 @@ public class Tablero {
                 }
             }
         }
-        return tablero;
     }
 
-    public String[][] tableroPrecargado2() {
+    public void  inicializarTableroPrecargado2() {
 
-        String R = "\u001B[31mR\033[0m";
-        String A = "\u001B[34mA\033[0m";
+        String R = "R";
+        String A = "A";
 
         for (int x = 0; x < tablero.length; x++) {
 
@@ -128,32 +143,69 @@ public class Tablero {
                 }
             }
         }
-        return tablero;
     }
-
-    public void mostrarTableroJuego(String[][] unTablero) {
-
+    ////////////////////////////////////////////////////////////////////////////
+    
+    ///////////////////////////////////////////////////////////////////////////
+    //metodos urilizados para mostrar la matriz
+    ///////////////////////////////////////////////////////////////////////////
+    public void mostrarTableroJuego() {
+        
         String[] letras = {" A ", " B ", " C ", " D ", " E ", " F "};
         int cont = 0;
+        String R = "\u001B[31mR\033[0m";
+        String A = "\u001B[34mA\033[0m";
+        String E = "\u001B[32mE\u001B[0m";
+        String numeral = "\u001B[32m#\u001B[0m";
+        String asterisco = "\u001B[32m*\u001B[0m";
+        
         mostrarNumHorizontales();
 
         System.out.println("   +-+-+-+-+-+-+");
 
-        for (int x = 0; x < unTablero.length; x++) {
+        for (int x = 0; x < tablero.length; x++) {
 
-            for (int y = 0; y < unTablero[x].length; y++) {
-
+            String[] miLinea = new String[6];
+            
+            for (int y = 0; y < tablero[x].length; y++) {
+                
+                switch(tablero[x][y]){
+                    case "R":
+                        miLinea[y] = R;
+                        break;
+                    
+                    case "A":
+                        miLinea[y] = A;
+                        break;
+                    
+                    case "#":
+                        miLinea[y] = numeral;
+                        break;
+                        
+                    case "*":
+                        miLinea[y] = asterisco;
+                        break;
+                        
+                    case "E":
+                        miLinea[y] = E;
+                        break;
+                     
+                    case " ":
+                        miLinea[y] = " ";
+                        break;
+                }
+                
                 if (y == 0) {
                     System.out.print(letras[cont]);
                 }
 
                 if (y == 5) {
 
-                    System.out.print("|" + unTablero[x][y] + "|");
+                    System.out.print("|" + miLinea[y] + "|");
                     System.out.print(letras[cont]);
                     cont++;
                 } else {
-                    System.out.print("|" + unTablero[x][y]);
+                    System.out.print("|" + miLinea[y]);
                 }
 
             }
@@ -171,7 +223,12 @@ public class Tablero {
         String[] letras = {"A", "B", "C", "D", "E", "F"};
 
     }
-
+    ///////////////////////////////////////////////////////////////////////////
+    
+    ///////////////////////////////////////////////////////////////////////////
+    //metodos que nos ayudan a conseguir la profundidad y la posicion de una ficha
+    //el valor que recibe de la coordenada y es de 1 a 6 y le hace -1
+    ///////////////////////////////////////////////////////////////////////////
     public int getValorLetra(String pLetra) {
 
         int retorno = 0;
@@ -213,7 +270,8 @@ public class Tablero {
     
     public String getFichaPosicion(int pNumerox, int pNumeroy){
             
-        return tablero[pNumerox][pNumeroy];          
+        //System.out.println("getFichaPos " + pNumerox + " " + pNumeroy);
+        return tablero[pNumerox][pNumeroy-1];          
     }
     
     public String getFichaPosicion(String pJugada){
@@ -232,7 +290,7 @@ public class Tablero {
     
     public int getprofundidadPosicion(int pNumerox, int pNumeroy){
             
-        return matrizPos[pNumerox][pNumeroy];          
+        return matrizPos[pNumerox][pNumeroy-1];          
     }
     
     public int getprofundidadPosicion(String pJugada){
@@ -243,8 +301,21 @@ public class Tablero {
         return getprofundidadPosicion(letra, numero);
         
     }
+    ///////////////////////////////////////////////////////////////////////////
+  
+    public void setFichaPosicion(String pJugada, String pValor){
+        
+        String letra = pJugada.substring(0, 1);
+        int numero = Integer.parseInt(pJugada.substring(1, 2));
+        
+        setFichaPosicion(getValorLetra(letra), numero, pValor);
+    }
     
-
+    public void setFichaPosicion(int pNumerox, int pNumeroy, String pValor){
+            
+        tablero[pNumerox][pNumeroy-1] = pValor;          
+    }
+    
 
 
 }

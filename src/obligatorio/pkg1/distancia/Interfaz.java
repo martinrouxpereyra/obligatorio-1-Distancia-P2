@@ -1,5 +1,7 @@
+//Martin Roux 254820 - Gaspar Flom 264135
 package obligatorio.pkg1.distancia;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Interfaz {
@@ -7,6 +9,8 @@ public class Interfaz {
     static Scanner lector;
     private static String[][] opciones;
     private static Sistema miSist;
+    //private String _R = "\u001B[31mR\033[0m";
+    //private String _A = "\u001B[34mA\033[0m";
     //private static Tablero _Tablero;
 
     public static void main(String[] args) {
@@ -217,7 +221,7 @@ public class Interfaz {
         System.out.print("seleccione el tablero a utilizar: ");
         System.out.println(" S|Standar, P1|precargado 1, P2|precargado 2");
         
-        confTablero = lector.nextLine();
+        confTablero = lector.nextLine().toUpperCase();
         //System.out.println(tablero);
         miSist.validarSeleccionDeTablero(confTablero);
         //////////////////////////////////////////////////////////////////////////////|
@@ -230,56 +234,57 @@ public class Interfaz {
         
         String jugada = "";
         
-        if(pTurno == "A"){
+        if(pTurno.equals("A")){
             System.out.println("Jugador Azul ingrese Su jugada");
-            jugada = lector.nextLine();
+            jugada = lector.nextLine().toUpperCase();
             
-            while(!miSist.validarJugadaDestino(jugada, pTurno)){
+            while(!miSist.validarJugadaOrigen(jugada, pTurno)){
                 System.out.println("jugada incorrecta, ingresela nuevamente");
-                jugada = lector.nextLine();
+                jugada = lector.nextLine().toUpperCase();
             }
         }else{
-            if(pTurno == "R"){
+            if(pTurno.equals("R")){
                 
                 System.out.println("jugador Rojo ingrese Su jugada");
-                jugada = lector.nextLine();
+                jugada = lector.nextLine().toUpperCase();
             
-                while(!miSist.validarJugadaDestino(jugada, pTurno)){
+                while(!miSist.validarJugadaOrigen(jugada, pTurno)){
                     System.out.println("jugada incorrecta, ingresela nuevamente");
-                    jugada = lector.nextLine();
+                    jugada = lector.nextLine().toUpperCase();
                 }
             }
         }
         return jugada;       
     }
     
-    public String pedirJugadaDestino(String pTurno){
+    public String pedirJugadaDestino(String pTurno, HashMap<String, String> pMiListaMovimientosValidos){
         
          String jugada = "";
          
         if(pTurno == "A"){
             System.out.println("Jugador Azul ingrese Su jugada de destino");
-            jugada = lector.nextLine();
+            jugada = lector.nextLine().toUpperCase();
             
-            while(!miSist.validarJugadaOrigen(jugada, pTurno)){
-                System.out.println("jugada incorrecta, ingresela nuevamente");
-                jugada = lector.nextLine();
+            while(!miSist.validarJugadaDestino(jugada, pMiListaMovimientosValidos)){
+                System.out.println("jugada destino incorrecta, ingresela nuevamente");
+                jugada = lector.nextLine().toUpperCase();
             }
         }else{
             if(pTurno == "R"){
                 
-                System.out.println("jugador Rojo ingrese Su jugada");
-                jugada = lector.nextLine();
+                System.out.println("jugador Rojo ingrese Su jugada de destino");
+                jugada = lector.nextLine().toUpperCase();
             
-                while(!miSist.validarJugadaOrigen(jugada, pTurno)){
-                    System.out.println("jugada incorrecta, ingresela nuevamente");
-                    jugada = lector.nextLine();
+                while(!miSist.validarJugadaDestino(jugada, pMiListaMovimientosValidos)){
+                    System.out.println("jugada destino incorrecta, ingresela nuevamente");
+                    jugada = lector.nextLine().toUpperCase();
                 }
             }
         }
 
         return jugada;       
     }
+            
     
     
     
