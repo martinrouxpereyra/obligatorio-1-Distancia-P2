@@ -2,7 +2,7 @@
 package obligatorio.pkg1.distancia;
 
 
-public class Jugador {
+public class Jugador implements Comparable<Jugador>{
     
     //Atributos
     private String nombre;
@@ -50,10 +50,17 @@ public class Jugador {
         this.puntaje = puntaje;
     }
     
-    @Override
-    public String toString(){
-        return "nombre: " + this.getNombre() +" edad: " + this.getEdad() + " alias: " + this.getAlias();
+    public void sumarPuntaje() {
+        this.puntaje++;
     }
     
+    @Override
+    public String toString(){
+        return "nombre: " + this.getNombre() +" edad: " + this.getEdad() + " alias: " + this.getAlias() + " Partidas ganadas: " + this.getPuntaje();
+    }
     
+    @Override
+    public int compareTo(Jugador pJugador) {
+        return this.getPuntaje() - pJugador.getPuntaje();
+    }
 }

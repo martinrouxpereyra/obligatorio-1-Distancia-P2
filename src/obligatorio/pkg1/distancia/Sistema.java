@@ -5,20 +5,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import static obligatorio.pkg1.distancia.Interfaz.lector;
 
-public class Sistema {
+public class Sistema{
 
     private Interfaz _Interfaz;
     //public ArrayList<Jugador> _ListaJugadores;
     private HashMap<String, Jugador> _ListaJugadores;
+    private List<Jugador> _ListaRanking;
     private Partida _Partida;
     private String[] arrayLetras = {"A", "B", "C", "D", "E", "F"};
     private HashMap<String, Integer> _ValorLetras;
 
     public Sistema() {
 
+        _ListaRanking = new ArrayList<Jugador>();
         _ListaJugadores = new HashMap<String, Jugador>();
         _Interfaz = new Interfaz();
         _ValorLetras = new HashMap<String, Integer>();
@@ -68,7 +71,7 @@ public class Sistema {
                     break;
 
                 case "R":
-                    //this.mostrarRanking();
+                    mostrarRanking();
                     break;
 
                 case "S":
@@ -85,19 +88,34 @@ public class Sistema {
     }
 
     public void jugarPartida() {
+
+        Jugador ganador;
         String turno = "R";
         String jugada;
         boolean salir = false;
+        int retornoJugarTurno;
         
-        while (jugarTurno(turno) != -1 && !salir) {
+        while (!salir) {
+
+            retornoJugarTurno = jugarTurno(turno);
             
+            if (retornoJugarTurno == -1) {
+                salir = true;
+                _Partida.setGanador(siguienteTurno(turno));
+            }
+            
+            if (retornoJugarTurno == 0) {
+                salir = true;
+            }
+
             turno = siguienteTurno(turno);
+
             
-            salir = _Partida.hayGanador();
         }
 
         //aca tengo que mostrar los datos del ganador
-        System.out.println("termino juego");
+        ganador = _Partida.getGanador();
+        System.out.println("Ganador: " + ganador);
     }
 
     public void registrarJugador(String pClave, Jugador pJugador) {
@@ -157,7 +175,7 @@ public class Sistema {
     public void registrarPartida(Jugador jugadorAzul, Jugador jugadorRojo, String unTipoTablero) {
 
         _Partida = new Partida(jugadorAzul, jugadorRojo, new Tablero(unTipoTablero));
-
+        cargarArrayList(_ListaJugadores);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -198,27 +216,25 @@ public class Sistema {
     }
     ////////////////////////////////////////////////////////////////////////////
 
-    
     ////////////////////////////////////////////////////////////////////////////
     //validaciones de las jugadas de origen y destino
     ////////////////////////////////////////////////////////////////////////////
     public boolean validarJugadaOrigen(String pJugada, String pTurno) {
 
-        
-
-        String letraPos = getXjugada(pJugada).toUpperCase();
-        int indicePos = getYjugada(pJugada);
-
-        System.out.println(letraPos);
-        System.out.println(indicePos);
-
-        if (letraPos == "X") {
-            return true;
-        }
-        
-        if (pJugada.length() != 2) {
+        if (pJugada.length() > 2) {
             return false;
         }
+        String letraPos = getXjugada(pJugada).toUpperCase();
+
+        if (letraPos.equals("X")) {
+            return true;
+        }
+
+        if (pJugada.length() == 1) {
+            return false;
+        }
+
+        int indicePos = getYjugada(pJugada);
 
         if (!(letraPos.equals("A") || letraPos.equals("B") || letraPos.equals("C") || letraPos.equals("D") || letraPos.equals("E") || letraPos.equals("F"))) {
             //System.out.println("adaaas");
@@ -244,19 +260,29 @@ public class Sistema {
 
     public boolean validarJugadaDestino(String pJugada, HashMap<String, String> pMiListaMovimientosValidos) {
 
-        if (pJugada.length() != 2) {
+        if (pJugada.length() > 2) {
             return false;
         }
 
         String letraPos = getXjugada(pJugada).toUpperCase();
-        int indicePos = getYjugada(pJugada);
 
-        System.out.println(letraPos);
-        System.out.println(indicePos);
-
-        if (letraPos == "X") {
+        if (letraPos.equals("X")) {
             return true;
         }
+
+        if (letraPos.equals("P")) {
+            if (pMiListaMovimientosValidos.size() == 0) {
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+        if (pJugada.length() == 1) {
+            return false;
+        }
+
+        int indicePos = getYjugada(pJugada);
 
         if (!(letraPos.equals("A") || letraPos.equals("B") || letraPos.equals("C") || letraPos.equals("D") || letraPos.equals("E") || letraPos.equals("F"))) {
             return false;
@@ -275,7 +301,21 @@ public class Sistema {
         return true;
     }
     ////////////////////////////////////////////////////////////////////////////
-    
+ 
+    public void cargarArrayList(HashMap<String, Jugador> miListaJugadores){
+        for (HashMap.Entry<String, Jugador> entry : _ListaJugadores.entrySet()) {
+            
+            _ListaRanking.add(entry.getValue());
+        }
+    }
+    public void mostrarRanking(){
+               
+        for(Jugador unJugador : _ListaRanking){
+            System.out.println(unJugador);
+            
+        }
+        System.out.println("");
+    }
     ////////////////////////////////////////////////////////////////////////////
     //funciones privadas
     ////////////////////////////////////////////////////////////////////////////
@@ -288,9 +328,10 @@ public class Sistema {
         String jugadaDestino;
 
         //punto 1, 2 y 3 del turno
+        mostrarTablero();
         jugadaOrigen = _Interfaz.pedirJugadaOrigen(pTurno).toUpperCase();
 
-        if (jugadaOrigen == "X") {
+        if (jugadaOrigen.equals("X")) {
             return -1;
         }
 
@@ -309,18 +350,28 @@ public class Sistema {
 
         //punto 6,7,8 
         jugadaDestino = _Interfaz.pedirJugadaDestino(pTurno, listaMovimientosValidos).toUpperCase();
+        
 
-        if (jugadaDestino == "X") {
+        if (jugadaDestino.equals("P")) {
+            return 1;
+        }
+        
+        if (jugadaDestino.equals("X")) {
             return -1;
         }
 
         //punto 9 - realizar movimiento
         realizarMovimiento(jugadaOrigen, jugadaDestino, pTurno, listaMovimientosValidos);
-        
+
         //punto 10 reDibujar tablero
         mostrarTablero();
+
         
-        return 1;
+        if( _Partida.hayGanador()){
+            return 0;
+        }else{
+            return 1;
+        }
     }
 
     private void realizarMovimiento(String pJugadaOrigen, String pJugadaDestino, String pTurno, HashMap<String, String> pMiListaMovimientosValidos) {
@@ -362,7 +413,7 @@ public class Sistema {
             ////////////////////////////////////////////////////////////////////////
 
             //sumo la ficha del jugador del turno
-            _Partida.sumarFicha(pTurno);
+            // _Partida.sumarFicha(pTurno);
             ////////////////////////////////////////////////////////////////////////
         }
 
@@ -598,4 +649,6 @@ public class Sistema {
         return Integer.parseInt(pJugada.substring(1, 2));
     }
     ////////////////////////////////////////////////////////////////////////////
+
+   
 }

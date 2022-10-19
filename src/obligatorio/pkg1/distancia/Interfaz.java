@@ -226,7 +226,7 @@ public class Interfaz {
         miSist.validarSeleccionDeTablero(confTablero);
         //////////////////////////////////////////////////////////////////////////////|
         
-       miSist.registrarPartida(jugadorAzul, jugadorRojo, confTablero);
+       miSist.registrarPartida(jugadorRojo, jugadorAzul, confTablero);
 
     }
 

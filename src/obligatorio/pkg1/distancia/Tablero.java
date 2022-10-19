@@ -135,7 +135,7 @@ public class Tablero {
                         tablero[x][y] = A;
                     } else {
                         if (x == 5 && y == 5) {
-                            tablero[x][y] = R;
+                            tablero[x][y] = A;
                         } else {
                             tablero[x][y] = " ";
                         }
